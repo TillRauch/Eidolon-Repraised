@@ -135,8 +135,10 @@ public class ReputationImpl implements IReputation, INBTSerializable<CompoundTag
             for (String uuidString : times.getAllKeys()) {
                 UUID uuid = UUID.fromString(uuidString);
                 CompoundTag spelltimes = times.getCompound(uuidString);
-                for (String rl : spelltimes.getAllKeys())
-                    pray(uuid, (PrayerSpell) Spells.find(new ResourceLocation(rl)), spelltimes.getLong(rl));
+                for (String rl : spelltimes.getAllKeys()) {
+                    if (Spells.find(new ResourceLocation(rl)) instanceof PrayerSpell prayerSpell)
+                        pray(uuid, prayerSpell, spelltimes.getLong(rl));
+                }
             }
         }
     }

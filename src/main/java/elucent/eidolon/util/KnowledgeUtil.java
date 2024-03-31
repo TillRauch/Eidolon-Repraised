@@ -4,6 +4,8 @@ import elucent.eidolon.api.research.Research;
 import elucent.eidolon.api.spells.Rune;
 import elucent.eidolon.api.spells.Sign;
 import elucent.eidolon.capability.IKnowledge;
+import elucent.eidolon.capability.IReputation;
+import elucent.eidolon.common.deity.Deities;
 import elucent.eidolon.network.KnowledgeUpdatePacket;
 import elucent.eidolon.network.Networking;
 import elucent.eidolon.registries.AdvancementTriggers;
@@ -11,9 +13,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
@@ -38,6 +42,7 @@ public class KnowledgeUtil {
             player.connection.send(new ClientboundSetActionBarTextPacket(Component.translatable("eidolon.title.new_fact")));
             Networking.sendTo(player, new KnowledgeUpdatePacket(player, true));
         });
+        AdvancementTriggers.triggerResearch(fact.getPath(), player);
     }
 
     public static void grantResearch(Entity entity, @NotNull Research research) {
@@ -168,4 +173,26 @@ public class KnowledgeUtil {
             Networking.sendTo(player, new KnowledgeUpdatePacket(player, true));
         });
     }
+
+    public static void tryFix(Player player) {
+        if (!(player instanceof ServerPlayer && player.level() instanceof ServerLevel server)) return;
+        LazyOptional<IReputation> devotion = server.getCapability(IReputation.INSTANCE);
+        if (devotion.isPresent()) {
+            IReputation d = devotion.resolve().get();
+            Deities.getDeities().forEach((deity) -> {
+                var rep = d.getReputation(player, deity.getId());
+                var curStage = deity.getProgression().last(rep);
+                double fakeRep = 1;
+                int counter = 0; // Prevent infinite loops, just in case, I don't trust this enough to leave it unchecked
+                while (fakeRep < curStage.rep() && counter++ < 20) {
+                    var next = deity.getProgression().next(fakeRep);
+                    if (next == null) break;
+                    deity.onReputationLock(player, next.id());
+                    deity.onReputationUnlock(player, next.id());
+                    fakeRep = next.rep() + 1;
+                }
+            });
+        }
+    }
+
 }

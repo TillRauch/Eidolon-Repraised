@@ -33,6 +33,7 @@ public class EidChantProvider extends SimpleDataProvider {
 
 
     protected void addChants() {
+        Spells.init();
         addChant(Spells.DARK_PRAYER, Signs.WICKED_SIGN, Signs.WICKED_SIGN, Signs.WICKED_SIGN);
         addChant(Spells.DARK_ANIMAL_SACRIFICE, Signs.WICKED_SIGN, Signs.BLOOD_SIGN, Signs.WICKED_SIGN);
         addChant(Spells.DARK_TOUCH, Signs.WICKED_SIGN, Signs.SOUL_SIGN, Signs.WICKED_SIGN, Signs.SOUL_SIGN);

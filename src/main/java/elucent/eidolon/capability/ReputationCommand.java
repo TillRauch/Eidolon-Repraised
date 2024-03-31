@@ -11,6 +11,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import elucent.eidolon.api.deity.Deity;
 import elucent.eidolon.common.deity.Deities;
+import elucent.eidolon.util.KnowledgeUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -46,6 +47,9 @@ public class ReputationCommand {
                                                 )
                                         )
                                 )
+                        )
+                        .then(Commands.literal("tryfix")
+                                .executes((ctx) -> apply(ctx.getSource(), EntityArgument.getPlayers(ctx, "targets"), (player, sources) -> player.getCapability(IKnowledge.INSTANCE).ifPresent((k) -> KnowledgeUtil.tryFix(player))))
                         )
                 )
         );

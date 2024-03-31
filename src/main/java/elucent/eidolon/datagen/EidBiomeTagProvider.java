@@ -4,6 +4,7 @@ import elucent.eidolon.Eidolon;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BiomeTagsProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -31,5 +32,6 @@ public class EidBiomeTagProvider extends BiomeTagsProvider {
         tag(BANANA_SLUG_TAG).addTag(BiomeTags.IS_JUNGLE).addTag(Tags.Biomes.IS_LUSH);
         tag(BROWN_SLUG_TAG).addTag(BiomeTags.IS_TAIGA).addTag(Tags.Biomes.IS_COLD_OVERWORLD);
         tag(SLIMY_SLUG_TAG).addTag(BiomeTags.IS_FOREST).addTag(Tags.Biomes.IS_WET_OVERWORLD);
+        tag(TagKey.create(ForgeRegistries.BIOMES.getRegistryKey(), new ResourceLocation("forge", "no_default_monsters")));
     }
 }

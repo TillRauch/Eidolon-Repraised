@@ -87,6 +87,8 @@ public class Eidolon {
         modEventBus.addListener(this::spawnPlacements);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        Config.SpellConfig serverConfig = new Config.SpellConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG, ModLoadingContext.get().getActiveContainer(), MODID + "-server");
+        ModLoadingContext.get().getActiveContainer().addConfig(serverConfig);
         modEventBus.register(new Registry());
         Registry.init();
         proxy.init();
@@ -99,6 +101,7 @@ public class Eidolon {
     public void setup(final FMLCommonSetupEvent event) {
         Networking.init();
         event.enqueueWork(() -> {
+            Spells.init();
             RitualRegistry.init();
             EidolonRecipes.ritualRecipeTypes.addAll(List.of(EidolonRecipes.CRAFTING_RITUAL_TYPE.get(), EidolonRecipes.SUMMON_RITUAL_TYPE.get(), EidolonRecipes.COMMAND_RITUAL_TYPE.get(), EidolonRecipes.LOCATION_RITUAL_TYPE.get(), EidolonRecipes.RITUAL_TYPE.get()));
             EidolonPotions.addBrewingRecipes();

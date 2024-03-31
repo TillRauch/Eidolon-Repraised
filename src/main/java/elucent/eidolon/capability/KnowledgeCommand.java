@@ -132,7 +132,8 @@ public class KnowledgeCommand {
                                 .then(Commands.literal("research").then(Commands.argument("research", new ResearchArgument()).executes((ctx) -> apply(ctx.getSource(), EntityArgument.getPlayers(ctx, "targets"), (player, sources) -> player.getCapability(IKnowledge.INSTANCE).ifPresent((k) -> KnowledgeUtil.removeResearch(player, ResearchArgument.getResearch(ctx, "research").getRegistryName()))))))
                                 .then(Commands.literal("rune").then(Commands.argument("rune", new RuneArgument()).executes((ctx) -> apply(ctx.getSource(), EntityArgument.getPlayers(ctx, "targets"), (player, sources) -> player.getCapability(IKnowledge.INSTANCE).ifPresent((k) -> KnowledgeUtil.removeRune(player, RuneArgument.getRune(ctx, "rune")))))))
                         )
-                ));
+                )
+        );
     }
 
     private static int apply(CommandSourceStack sources, Collection<? extends Player> players, BiConsumer<Player, CommandSourceStack> action) {

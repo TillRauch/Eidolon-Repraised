@@ -2,7 +2,6 @@ package elucent.eidolon.common.deity;
 
 import elucent.eidolon.api.deity.Deity;
 import elucent.eidolon.capability.Facts;
-import elucent.eidolon.capability.IReputation;
 import elucent.eidolon.registries.Signs;
 import elucent.eidolon.util.KnowledgeUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +22,7 @@ public class DarkDeity extends Deity {
     }
 
     @Override
-    public void onReputationUnlock(Player player, IReputation rep, ResourceLocation lock) {
+    public void onReputationUnlock(Player player, ResourceLocation lock) {
         if (lock.equals(DeityLocks.SACRIFICE_MOB)) {
             KnowledgeUtil.grantSign(player, Signs.SOUL_SIGN);
         } else if (lock.equals(DeityLocks.SACRIFICE_VILLAGER)) {
@@ -36,7 +35,7 @@ public class DarkDeity extends Deity {
     }
 
     @Override
-    public void onReputationLock(Player player, IReputation rep, ResourceLocation lock) {
+    public void onReputationLock(Player player, ResourceLocation lock) {
         if (lock.equals(DeityLocks.SACRIFICE_MOB)) {
             KnowledgeUtil.grantSign(player, Signs.BLOOD_SIGN);
         } else if (lock.equals(DeityLocks.SACRIFICE_VILLAGER)) {

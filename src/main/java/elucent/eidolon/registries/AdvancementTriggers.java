@@ -9,9 +9,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.AABB;
 
+import java.util.HashMap;
+
 import static elucent.eidolon.Eidolon.prefix;
 
 public class AdvancementTriggers {
+
+    //TODO Change to resource locations in 1.21
+    static final HashMap<String, CriterionTrigger<?>> triggers = new HashMap<>();
 
     public static void init() {
         WICKED = register(new PlayerTrigger(prefix("wicked_path")));
@@ -44,10 +49,11 @@ public class AdvancementTriggers {
     }
 
     public static <T extends CriterionTrigger<?>> T register(T trigger) {
-        return CriteriaTriggers.register(trigger);
+        T cTrigger = CriteriaTriggers.register(trigger);
+        triggers.put(trigger.getId().toString(), cTrigger);
+        return cTrigger;
     }
 
-    //TODO Change to maps
 
     public static void triggerSign(Sign sign, ServerPlayer player) {
         switch (sign.getRegistryName().getPath()) {
@@ -57,7 +63,10 @@ public class AdvancementTriggers {
     }
 
     public static void triggerResearch(String research, ServerPlayer player) {
-        switch (research) {
+        var trigger = triggers.get(research);
+        if (trigger instanceof PlayerTrigger playerTrigger) {
+            playerTrigger.trigger(player);
+        } else switch (research) {
             case "eidolon:frost" -> FROST.trigger(player);
             case "eidolon:flames" -> FLAME.trigger(player);
             case "sacrifice_mob" -> SACRIFICE.trigger(player);

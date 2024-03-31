@@ -110,6 +110,10 @@ public abstract class Deity implements RGBProvider {
     }
 
     public class Progression {
+        public TreeMap<Integer, Stage> getSteps() {
+            return steps;
+        }
+
         final TreeMap<Integer, Stage> steps;
 
         public void setMax(int max) {
@@ -174,17 +178,17 @@ public abstract class Deity implements RGBProvider {
         }
         //we advanced a stage
         if (nextStage.rep > currStage.rep) {
-            onReputationUnlock(player, rep, currStage.id());
+            onReputationUnlock(player, currStage.id());
         }
         double curr = rep.getReputation(player, getId()); //update after we may have changed it
 
         //we didn't advance a stage, if the cap was reached then we need to grant the next step
         if (curr == nextStage.rep() && updated != curr) {
-            onReputationLock(player, rep, currStage.id());
+            onReputationLock(player, currStage.id());
         }
     }
 
-    public abstract void onReputationUnlock(Player player, IReputation rep, ResourceLocation lock);
+    public abstract void onReputationUnlock(Player player, ResourceLocation lock);
 
-    public abstract void onReputationLock(Player player, IReputation rep, ResourceLocation lock);
+    public abstract void onReputationLock(Player player, ResourceLocation lock);
 }
