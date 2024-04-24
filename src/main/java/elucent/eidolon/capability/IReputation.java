@@ -63,7 +63,7 @@ public interface IReputation {
     default void considerChange(Player player, ResourceLocation deity, double prev) {
         double amount = getReputation(player, deity);
         Deity d = Deities.find(deity);
-        if (d != null && amount != prev) d.onReputationChange(player, this, prev, amount);
+        if (d != null) d.onReputationChange(player, this, prev, amount);
     }
 
     default void addReputation(Player player, ResourceLocation deity, double amount) {

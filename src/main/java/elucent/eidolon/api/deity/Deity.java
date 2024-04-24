@@ -150,7 +150,7 @@ public abstract class Deity implements RGBProvider {
 
         public Stage tryProgress(IReputation rep, Player player, double prev, double current) {
             if (current >= max) return null; // Can't progress past max.
-            Stage s = next(prev);
+            Stage s = next(prev == 0 ? 1 : current);
             if (current > s.rep) {
                 if (s.satisfiedBy(player)) return next(current);
                 else {
@@ -159,6 +159,7 @@ public abstract class Deity implements RGBProvider {
             }
             return s;
         }
+
 
         public void regress(IReputation rep, Player player) {
             double level = rep.getReputation(player, Deity.this.getId());
@@ -170,7 +171,7 @@ public abstract class Deity implements RGBProvider {
     public void onReputationChange(Player player, IReputation rep, double prev, double updated) {
 
         Stage nextStage = progression.tryProgress(rep, player, prev, updated);
-        Stage currStage = progression.next(prev);
+        Stage currStage = progression.next(prev == 0 ? 1 : prev);
         //we maxed out
         if (nextStage == null) {
             rep.setReputation(player.getUUID(), id, progression.max);
