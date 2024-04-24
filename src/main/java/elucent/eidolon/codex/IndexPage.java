@@ -26,10 +26,17 @@ public class IndexPage extends Page {
     public static class IndexEntry {
         final Chapter chapter;
         final ItemStack icon;
+        boolean alwaysRender = false;
 
         public IndexEntry(Chapter chapter, ItemStack icon) {
             this.chapter = chapter;
             this.icon = icon;
+        }
+
+        public IndexEntry(Chapter chapter, ItemStack icon, boolean alwaysRender) {
+            this.chapter = chapter;
+            this.icon = icon;
+            this.alwaysRender = alwaysRender;
         }
 
         @OnlyIn(Dist.CLIENT)
@@ -106,10 +113,13 @@ public class IndexPage extends Page {
     @OnlyIn(Dist.CLIENT)
     public void render(CodexGui gui, @NotNull GuiGraphics mStack, ResourceLocation bg, int x, int y, int mouseX, int mouseY) {
         for (int i = 0; i < entries.size(); i++) {
-            mStack.blit(bg, x + 1, y + 7 + i * 20, 128, entries.get(i).isUnlocked() ? 0 : 96, 122, 18);
-            if (entries.get(i).isUnlocked()) {
-                mStack.renderItem(entries.get(i).icon, x + 2, y + 8 + i * 20);
-                drawText(mStack, I18n.get(entries.get(i).chapter.titleKey), x + 24, y + 20 + i * 20 - Minecraft.getInstance().font.lineHeight);
+            IndexEntry entry = entries.get(i);
+            boolean unlocked = entry.isUnlocked();
+            if (entry.alwaysRender || unlocked)
+                mStack.blit(bg, x + 1, y + 7 + i * 20, 128, unlocked ? 0 : 96, 122, 18);
+            if (unlocked) {
+                mStack.renderItem(entry.icon, x + 2, y + 8 + i * 20);
+                drawText(mStack, I18n.get(entry.chapter.titleKey), x + 24, y + 20 + i * 20 - Minecraft.getInstance().font.lineHeight);
             }
         }
     }

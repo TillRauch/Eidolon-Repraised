@@ -40,6 +40,12 @@ public class Spells {
         return null;
     }
 
+    public static Spell registerWithFallback(Spell spell) {
+        register(spell);
+        spells.add(spell);
+        return spell;
+    }
+
     public static Spell register(Spell spell) {
         spellMap.put(spell.getRegistryName(), spell);
         ForgeConfigSpec spec;
@@ -56,6 +62,7 @@ public class Spells {
     public static List<Spell> getSpells() {
         return spells;
     }
+    public static Map<ResourceLocation, Spell> getSpellMap() { return spellMap; }
 
     public static Spell DARK_PRAYER, DARKLIGHT_CHANT, DARK_ANIMAL_SACRIFICE, DARK_TOUCH, FROST_CHANT, DARK_VILLAGER_SACRIFICE, ZOMBIFY, ENTHRALL_UNDEAD, LIGHT_PRAYER, FIRE_CHANT, LIGHT_CHANT, HOLY_TOUCH, LAY_ON_HANDS, CURE_ZOMBIE_CHANT, SMITE_CHANT, SUNDER_ARMOR, BLESS_ARMOR, WATER_CHANT, UNDEAD_LURE;
     // dummy

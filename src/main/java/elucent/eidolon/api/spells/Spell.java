@@ -37,4 +37,9 @@ public abstract class Spell {
     public void buildConfig(ForgeConfigSpec.Builder spellBuilder) {
     }
 
+    @Override
+    public boolean equals(Object obj) {
+
+        return registryName.equals(((Spell) obj).registryName);
+    }
 }
