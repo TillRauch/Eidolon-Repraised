@@ -150,10 +150,13 @@ public abstract class Deity implements RGBProvider {
 
         public Stage tryProgress(IReputation rep, Player player, double prev, double current) {
             if (current >= max) return null; // Can't progress past max.
-            Stage s = next(prev == 0 ? 1 : current);
-            if (current > s.rep) {
-                if (s.satisfiedBy(player)) return next(current);
-                else {
+            Stage s = next(prev == 0 ? 1 : prev); //get the current stage
+            if (current > s.rep) { // we have completed this stage
+                if (s.satisfiedBy(player)) { // current stage requirements are satisfied
+                    Stage next = next(s.rep + 1); //next stage and clamp rep to next stage to avoid skipping
+                    rep.setReputation(player.getUUID(), Deity.this.getId(), Math.min(current, next.rep));
+                    return next;
+                } else { // we have not satisfied the requirements yet, so cap the rep to the limit of the current stage
                     rep.setReputation(player.getUUID(), Deity.this.getId(), s.rep);
                 }
             }
