@@ -153,7 +153,7 @@ public class PrayerSpell extends StaticSpell {
     public void buildConfig(ForgeConfigSpec.Builder spellBuilder) {
         super.buildConfig(spellBuilder);
         COOLDOWN = spellBuilder.comment("Cooldown for this prayer spell").defineInRange("cooldown", 0, 21000, Integer.MAX_VALUE);
-        BASE_REP = spellBuilder.comment("Base reputation gained from this prayer spell").defineInRange("base_rep", baseRep, 0, Integer.MAX_VALUE);
+        BASE_REP = spellBuilder.comment("Base reputation gained from this prayer spell").defineInRange("base_reputation", baseRep, 0, Integer.MAX_VALUE);
         POWER_MULTIPLIER = spellBuilder.comment("Altar Power multiplier for reputation gained with this prayer spell").defineInRange("power_multiplier", powerMultiplier, 0, Double.MAX_VALUE);
     }
 

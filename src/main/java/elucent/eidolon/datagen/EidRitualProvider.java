@@ -103,7 +103,7 @@ public class EidRitualProvider extends SimpleDataProvider {
                 ingredientsFromObjects(List.of(Registry.SOUL_SHARD.get(), Items.SLIME_BALL)),
                 List.of());
 
-        makeSummon(prefix("summon_raven"), EidolonEntities.RAVEN.get(), 3,
+        makeSummon(prefix("summon_ravens"), EidolonEntities.RAVEN.get(), 3,
                 Items.BEETROOT_SEEDS,
                 ingredientsFromObjects(List.of(Registry.SOUL_SHARD.get(), Items.FEATHER)),
                 List.of());
