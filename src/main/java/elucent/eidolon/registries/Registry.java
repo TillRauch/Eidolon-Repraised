@@ -445,7 +445,7 @@ public class Registry {
     public static final RegistryObject<Block> WOODEN_STAND = addBlock("wooden_brewing_stand", () -> new WoodenStandBlock(blockProps(Blocks.BREWING_STAND)
             .sound(SoundType.STONE).strength(2.0f, 3.0f)
             .noOcclusion()));
-    public static final RegistryObject<Block> GHOST_LIGHT = BLOCKS.register("ghost_light", () -> new GhostLight(blockProps(Blocks.AIR)
+    public static final RegistryObject<Block> GHOST_LIGHT = BLOCKS.register("ghost_light", () -> new GhostLight(BlockBehaviour.Properties.of().noCollission().noOcclusion().noLootTable().noParticlesOnBreak().dynamicShape().strength(0f, 0f)
             .sound(SoundType.FROGLIGHT).lightLevel(p -> p.getValue(GhostLight.DEITY) ? 12 : 8)));
 
     public static DecoBlockPack
