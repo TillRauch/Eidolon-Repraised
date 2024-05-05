@@ -4,6 +4,7 @@ import elucent.eidolon.Eidolon;
 import elucent.eidolon.api.ritual.IRitualItemFocus;
 import elucent.eidolon.api.ritual.Ritual;
 import elucent.eidolon.common.item.SummoningStaffItem;
+import elucent.eidolon.common.spell.ThrallSpell;
 import elucent.eidolon.network.MagicBurstEffectPacket;
 import elucent.eidolon.network.Networking;
 import elucent.eidolon.network.RitualConsumePacket;
@@ -48,7 +49,7 @@ public class AbsorptionRitual extends Ritual {
             }
         }
 
-        List<LivingEntity> entities = world.getEntitiesOfClass(LivingEntity.class, getSearchBounds(pos), (e) -> Eidolon.getTrueMobType(e) == MobType.UNDEAD && !(e instanceof Player) && !EntityUtil.isEnthralled(e) && e.getHealth() <= e.getMaxHealth() / 3);
+        List<LivingEntity> entities = world.getEntitiesOfClass(LivingEntity.class, getSearchBounds(pos), (e) -> (Eidolon.getTrueMobType(e) == MobType.UNDEAD || e.getType().is(ThrallSpell.ENTHRALL_WHITELIST)) && !e.getType().is(ThrallSpell.ENTHRALL_BLACKLIST) && !(e instanceof Player) && !EntityUtil.isEnthralled(e) && e.getHealth() <= e.getMaxHealth() / 3);
         ListTag entityTags = new ListTag();
         for (LivingEntity e : entities) {
             e.setHealth(e.getMaxHealth());

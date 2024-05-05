@@ -10,6 +10,7 @@ import elucent.eidolon.common.entity.ai.PriestBarterGoal;
 import elucent.eidolon.common.entity.ai.ThrallTargetGoal;
 import elucent.eidolon.common.entity.ai.WitchBarterGoal;
 import elucent.eidolon.common.item.*;
+import elucent.eidolon.common.spell.ThrallSpell;
 import elucent.eidolon.common.tile.GobletTileEntity;
 import elucent.eidolon.network.*;
 import elucent.eidolon.registries.EidolonAttributes;
@@ -288,7 +289,7 @@ public class Events {
                         stack -> CodexItem.withSign(stack, Signs.SACRED_SIGN)
                 ));
             }
-            if (event.getEntity() instanceof PathfinderMob mob && Eidolon.getTrueMobType(mob) == MobType.UNDEAD && (mob.getNavigation() instanceof GroundPathNavigation || mob.getNavigation() instanceof FlyingPathNavigation)) {
+            if (event.getEntity() instanceof PathfinderMob mob && ((Eidolon.getTrueMobType(mob) == MobType.UNDEAD && !mob.getType().is(ThrallSpell.ENTHRALL_BLACKLIST)) || mob.getType().is(ThrallSpell.ENTHRALL_WHITELIST)) && (mob.getNavigation() instanceof GroundPathNavigation || mob.getNavigation() instanceof FlyingPathNavigation)) {
                 mob.goalSelector.addGoal(1, new AvoidEntityGoal<>(mob, LivingEntity.class, 6.0F, 1.0D, 1.2D, living -> !EntityUtil.isEnthralled(mob) && living.hasEffect(EidolonPotions.LIGHT_BLESSED.get())));
                 try {
                     mob.goalSelector.addGoal(2, new FollowOwnerGoal(mob, 1.5F, 3.0F, 1.2F));

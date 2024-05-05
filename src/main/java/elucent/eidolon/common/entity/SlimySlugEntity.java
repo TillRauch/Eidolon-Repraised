@@ -60,7 +60,18 @@ public class SlimySlugEntity extends TamableAnimal {
     @Nullable
     @Override
     public SlimySlugEntity getBreedOffspring(@NotNull ServerLevel serverLevel, @NotNull AgeableMob ageableMob) {
-        return EidolonEntities.SLIMY_SLUG.get().create(serverLevel);
+        SlimySlugEntity offspring = EidolonEntities.SLIMY_SLUG.get().create(serverLevel);
+        if (offspring != null) {
+            Holder<Biome> holder = serverLevel.getBiome(this.blockPosition());
+            if (holder.is(EidBiomeTagProvider.BROWN_SLUG_TAG)) {
+                offspring.setVariant(2);
+            } else if (holder.is(EidBiomeTagProvider.BANANA_SLUG_TAG)) {
+                offspring.setVariant(1);
+            } else {
+                offspring.setVariant(0);
+            }
+        }
+        return offspring;
     }
 
     private void setVariant(int type) {
@@ -109,19 +120,21 @@ public class SlimySlugEntity extends TamableAnimal {
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (!this.isTame() && itemstack.getItem() == Items.PUMPKIN_SEEDS) {
-            if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-            if (!this.level.isClientSide) {
-                if (this.random.nextInt(10) == 0 && !ForgeEventFactory.onAnimalTame(this, player)) {
-                    this.tame(player);
-                    this.level.broadcastEntityEvent(this, (byte) 7);
-                } else {
-                    this.level.broadcastEntityEvent(this, (byte) 6);
+        if (itemstack.getItem() == Items.PUMPKIN_SEEDS) {
+            if (!this.isTame()) {
+                if (!player.getAbilities().instabuild) {
+                    itemstack.shrink(1);
                 }
-            }
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+                if (!this.level.isClientSide) {
+                    if (this.random.nextInt(10) == 0 && !ForgeEventFactory.onAnimalTame(this, player)) {
+                        this.tame(player);
+                        this.level.broadcastEntityEvent(this, (byte) 7);
+                    } else {
+                        this.level.broadcastEntityEvent(this, (byte) 6);
+                    }
+                }
+                return InteractionResult.sidedSuccess(this.level.isClientSide);
+            } else return super.mobInteract(player, hand);
         } else if (onGround() && this.isTame() && this.isOwnedBy(player)) {
             if (!this.level.isClientSide) {
                 this.setOrderedToSit(!this.isOrderedToSit());

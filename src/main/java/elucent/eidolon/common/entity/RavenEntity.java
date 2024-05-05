@@ -72,8 +72,8 @@ public class RavenEntity extends ShoulderRidingEntity implements FlyingAnimal {
                 .add(Attributes.MAX_HEALTH, 8.0D)
                 .add(Attributes.FLYING_SPEED, 0.4F)
                 .add(Attributes.MOVEMENT_SPEED, 0.2F)
-            .add(Attributes.ARMOR, 0.0D)
-            .build();
+                .add(Attributes.ARMOR, 0.0D)
+                .build();
     }
 
     @Override
@@ -84,11 +84,11 @@ public class RavenEntity extends ShoulderRidingEntity implements FlyingAnimal {
             this.setDeltaMovement(motion.multiply(1.0D, 0.6D, 1.0D));
         }
 
-       if (!this.level.isClientSide && this.isAlive() && !this.isBaby() && --this.featherTime <= 0) {
-          this.playSound(SoundEvents.CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-          this.spawnAtLocation(Registry.RAVEN_FEATHER.get());
-          this.featherTime = this.random.nextInt(12000) + 12000;
-       }
+        if (!this.level.isClientSide && this.isAlive() && !this.isBaby() && --this.featherTime <= 0) {
+            this.playSound(SoundEvents.CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+            this.spawnAtLocation(Registry.RAVEN_FEATHER.get());
+            this.featherTime = this.random.nextInt(12000) + 12000;
+        }
     }
 
     @Override
@@ -128,19 +128,21 @@ public class RavenEntity extends ShoulderRidingEntity implements FlyingAnimal {
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (!this.isTame() && itemstack.getItem() == Items.BEETROOT_SEEDS) {
-            if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-            if (!this.level.isClientSide) {
-                if (this.random.nextInt(10) == 0 && !ForgeEventFactory.onAnimalTame(this, player)) {
-                    this.tame(player);
-                    this.level.broadcastEntityEvent(this, (byte) 7);
-                } else {
-                    this.level.broadcastEntityEvent(this, (byte) 6);
+        if (itemstack.getItem() == Items.BEETROOT_SEEDS) {
+            if (!this.isTame()) {
+                if (!player.getAbilities().instabuild) {
+                    itemstack.shrink(1);
                 }
-            }
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+                if (!this.level.isClientSide) {
+                    if (this.random.nextInt(10) == 0 && !ForgeEventFactory.onAnimalTame(this, player)) {
+                        this.tame(player);
+                        this.level.broadcastEntityEvent(this, (byte) 7);
+                    } else {
+                        this.level.broadcastEntityEvent(this, (byte) 6);
+                    }
+                }
+                return InteractionResult.sidedSuccess(this.level.isClientSide);
+            } else return super.mobInteract(player, hand);
         } else if (onGround() && this.isTame() && this.isOwnedBy(player)) {
             if (!this.level.isClientSide) {
                 this.setOrderedToSit(!this.isOrderedToSit());
@@ -150,7 +152,7 @@ public class RavenEntity extends ShoulderRidingEntity implements FlyingAnimal {
             return super.mobInteract(player, hand);
         }
     }
-    
+
     @Override
     public boolean isFlying() {
         return !onGround();
