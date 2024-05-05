@@ -87,8 +87,6 @@ public class Eidolon {
         modEventBus.addListener(this::spawnPlacements);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-        Config.SpellConfig serverConfig = new Config.SpellConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG, ModLoadingContext.get().getActiveContainer(), MODID + "-server");
-        ModLoadingContext.get().getActiveContainer().addConfig(serverConfig);
         modEventBus.register(new Registry());
         Registry.init();
         proxy.init();

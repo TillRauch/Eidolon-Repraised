@@ -47,15 +47,6 @@ public class Config {
 
     // Variant of server config that is relocated to main config folder
 
-    public static ForgeConfigSpec SERVER_CONFIG;
-
-    static {
-        ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
-        SERVER_CONFIG = SERVER_BUILDER.build();
-    }
-
-
-
     static public class SpellConfig extends ModConfig {
 
         private static final SpellConfigFileTypeHandler TOML_HANDLER = new SpellConfigFileTypeHandler();
