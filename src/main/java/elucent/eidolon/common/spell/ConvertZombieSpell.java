@@ -11,6 +11,7 @@ import elucent.eidolon.registries.Registry;
 import elucent.eidolon.registries.Signs;
 import elucent.eidolon.util.KnowledgeUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.monster.ZombieVillager;
@@ -29,7 +30,10 @@ public class ConvertZombieSpell extends PrayerSpell {
         HitResult ray = rayTrace(player, player.getBlockReach(), 0, true);
         boolean flag = ray instanceof EntityHitResult result && result.getEntity() instanceof ZombieVillager;
         EffigyTileEntity effigy = getEffigy(world, pos);
-        if (effigy == null) return false;
+        if (effigy == null) {
+            player.displayClientMessage(Component.translatable("eidolon.message.no_effigy"), true);
+            return false;
+        }
         AltarInfo info = AltarInfo.getAltarInfo(world, effigy.getBlockPos());
         if (info.getAltar() != Registry.STONE_ALTAR.get() || info.getIcon() != Registry.ELDER_EFFIGY.get())
             return false;

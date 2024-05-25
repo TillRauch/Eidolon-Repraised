@@ -33,9 +33,7 @@ public class TileEntityBase extends BlockEntity {
         CompoundTag tag = new CompoundTag();
         saveAdditional(tag);
         if (level == null) return;
-        if (level.isClientSide)
-            Networking.INSTANCE.sendToServer(new TESyncPacket(worldPosition, tag));
-        else {
+        if (!level.isClientSide()) {
             Networking.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)), new TESyncPacket(worldPosition, tag));
         }
     }

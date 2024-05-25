@@ -10,6 +10,7 @@ import elucent.eidolon.common.tile.GobletTileEntity;
 import elucent.eidolon.registries.Signs;
 import elucent.eidolon.util.KnowledgeUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Animal;
@@ -26,7 +27,10 @@ public class AnimalSacrificeSpell extends PrayerSpell {
         if (reputationCheck(world, player, 3.0)) return false;
         EffigyTileEntity effigy = getEffigy(world, pos);
         GobletTileEntity goblet = getGoblet(world, pos);
-        if (effigy == null || goblet == null || goblet.getEntityType() == null) return false;
+        if (effigy == null || goblet == null || goblet.getEntityType() == null) {
+            player.displayClientMessage(Component.translatable("eidolon.message.no_effigy"), true);
+            return false;
+        }
         Entity test = goblet.getEntityType().create(world);
         return test instanceof Animal && effigy.ready();
     }

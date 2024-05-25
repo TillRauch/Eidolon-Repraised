@@ -133,7 +133,10 @@ public class CenserTileEntity extends TileEntityBase implements IBurner {
             return;
         }
         List<EffigyTileEntity> effigies = Ritual.getTilesWithinAABB(EffigyTileEntity.class, world, new AABB(pos.offset(-4, -4, -4), pos.offset(5, 5, 5)));
-        if (effigies.isEmpty()) return;
+        if (effigies.isEmpty()) {
+            player.displayClientMessage(Component.translatable("eidolon.message.no_effigy"), true);
+            return;
+        }
         EffigyTileEntity effigy = effigies.stream().min(Comparator.comparingDouble((e) -> e.getBlockPos().distSqr(pos))).get();
         if (effigy.ready()) {
             Deity deity = Deities.LIGHT_DEITY;

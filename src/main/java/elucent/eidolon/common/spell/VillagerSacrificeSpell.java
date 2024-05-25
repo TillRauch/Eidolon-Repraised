@@ -11,6 +11,7 @@ import elucent.eidolon.registries.Registry;
 import elucent.eidolon.registries.Signs;
 import elucent.eidolon.util.KnowledgeUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -27,7 +28,10 @@ public class VillagerSacrificeSpell extends PrayerSpell {
         if (reputationCheck(world, player, 15)) return false;
         EffigyTileEntity effigy = getEffigy(world, pos);
         GobletTileEntity goblet = getGoblet(world, pos);
-        if (effigy == null || goblet == null || goblet.getEntityType() == null) return false;
+        if (effigy == null || goblet == null || goblet.getEntityType() == null) {
+            player.displayClientMessage(Component.translatable("eidolon.message.no_effigy"), true);
+            return false;
+        }
         AltarInfo info = AltarInfo.getAltarInfo(world, effigy.getBlockPos());
         if (info.getAltar() != Registry.STONE_ALTAR.get() || info.getIcon() != Registry.ELDER_EFFIGY.get())
             return false;

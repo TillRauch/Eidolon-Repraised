@@ -11,6 +11,7 @@ import elucent.eidolon.registries.Registry;
 import elucent.eidolon.registries.Signs;
 import elucent.eidolon.util.DamageTypeData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -64,8 +65,10 @@ public class DarkTouchSpell extends StaticSpell {
     @Override
     public boolean canCast(Level world, BlockPos pos, Player player) {
         if (!world.getCapability(IReputation.INSTANCE).isPresent()) return false;
-        if (world.getCapability(IReputation.INSTANCE).resolve().get().getReputation(player, Deities.DARK_DEITY.getId()) < 4.0)
+        if (world.getCapability(IReputation.INSTANCE).resolve().get().getReputation(player, Deities.DARK_DEITY.getId()) < 4.0) {
+            player.displayClientMessage(Component.translatable("eidolon.message.not_enough_reputation"), true);
             return false;
+        }
 
         Vec3 v = getVector(world, player);
         List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, new AABB(v.x - 1.5, v.y - 1.5, v.z - 1.5, v.x + 1.5, v.y + 1.5, v.z + 1.5));
