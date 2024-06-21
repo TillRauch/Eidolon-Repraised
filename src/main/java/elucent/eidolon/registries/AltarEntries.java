@@ -12,8 +12,8 @@ import java.util.Map;
 public class AltarEntries {
     static final Map<Block, AltarEntry> entries = new HashMap<>();
 
-    public static AltarEntry find(Block state) {
-        return entries.getOrDefault(state, null);
+    public static AltarEntry find(Block block) {
+        return entries.getOrDefault(block, null);
     }
 
     public static AltarEntry find(Item blockItem) {
@@ -34,7 +34,6 @@ public class AltarEntries {
         entries.put(Blocks.ZOMBIE_HEAD, new AltarEntry(AltarKeys.SKULL_KEY).setCapacity(1).setPower(1));
         entries.put(Blocks.WITHER_SKELETON_SKULL, new AltarEntry(AltarKeys.SKULL_KEY).setCapacity(3).setPower(1));
 
-
         entries.put(Blocks.POTTED_WARPED_ROOTS, new AltarEntry(AltarKeys.PLANT_KEY).setPower(1));
         entries.put(Blocks.POTTED_CRIMSON_ROOTS, new AltarEntry(AltarKeys.PLANT_KEY).setPower(1));
         entries.put(Blocks.POTTED_WARPED_FUNGUS, new AltarEntry(AltarKeys.PLANT_KEY).setPower(2));
@@ -44,4 +43,5 @@ public class AltarEntries {
         entries.put(Registry.CENSER.get(), new AltarEntry(AltarKeys.OFFERS_KEY).setCapacity(2));
 
     }
+
 }

@@ -1,12 +1,10 @@
 package elucent.eidolon.codex;
 
 import elucent.eidolon.capability.Facts;
-import elucent.eidolon.codex.IndexPage.FactLockedEntry;
-import elucent.eidolon.codex.IndexPage.IndexEntry;
-import elucent.eidolon.codex.IndexPage.ResearchLockedEntry;
-import elucent.eidolon.codex.IndexPage.SignLockedEntry;
+import elucent.eidolon.codex.IndexPage.*;
 import elucent.eidolon.codex.ListPage.ListEntry;
 import elucent.eidolon.codex.SignIndexPage.SignEntry;
+import elucent.eidolon.common.deity.Deities;
 import elucent.eidolon.registries.*;
 import elucent.eidolon.util.ColorUtil;
 import net.minecraft.world.item.ItemStack;
@@ -691,7 +689,7 @@ public class CodexChapters {
                             new IndexEntry(GOBLET, new ItemStack(Registry.GOBLET.get())),
                             new SignLockedEntry(DARK_PRAYER, new ItemStack(Registry.SHADOW_GEM.get()), Signs.WICKED_SIGN),
                             new SignLockedEntry(ANIMAL_SACRIFICE, new ItemStack(Items.PORKCHOP), Signs.BLOOD_SIGN),
-                            new SignLockedEntry(DARK_TOUCH, new ItemStack(Registry.UNHOLY_SYMBOL.get()), Signs.SOUL_SIGN, Signs.WICKED_SIGN),
+                            new ReputationLockedEntry(DARK_TOUCH, new ItemStack(Registry.UNHOLY_SYMBOL.get()), 10, Deities.DARK_DEITY),
                             new SignLockedEntry(UNHOLY_EFFIGY, new ItemStack(Registry.ELDER_EFFIGY.get()), Signs.WICKED_SIGN, Signs.SOUL_SIGN),
                             new FactLockedEntry(VILLAGER_SACRIFICE, new ItemStack(Items.IRON_SWORD), Facts.VILLAGER_SACRIFICE),
                             new FactLockedEntry(ZOMBIFY, new ItemStack(Registry.ZOMBIE_HEART.get()), Facts.ZOMBIFY)
@@ -701,7 +699,7 @@ public class CodexChapters {
                             new IndexEntry(CENSER, new ItemStack(Registry.CENSER.get().asItem())),
                             new SignLockedEntry(LIGHT_PRAYER, new ItemStack(Registry.ENCHANTED_ASH.get()), Signs.SACRED_SIGN),
                             new SignLockedEntry(INCENSE_BURN, new ItemStack(Registry.OFFERING_INCENSE.get()), Signs.FLAME_SIGN),
-                            new SignLockedEntry(HOLY_TOUCH, new ItemStack(Registry.HOLY_SYMBOL.get()), Signs.SOUL_SIGN, Signs.SACRED_SIGN),
+                            new ReputationLockedEntry(HOLY_TOUCH, new ItemStack(Registry.HOLY_SYMBOL.get()), 10, Deities.LIGHT_DEITY),
                             new SignLockedEntry(HOLY_EFFIGY, new ItemStack(Registry.ELDER_EFFIGY.get()), Signs.SACRED_SIGN, Signs.SOUL_SIGN),
                             new FactLockedEntry(HEAL, PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.HEALING), Facts.VILLAGER_HEALING),
                             new FactLockedEntry(CURE_ZOMBIE, new ItemStack(Items.GOLDEN_APPLE), Facts.ZOMBIE_CURE)

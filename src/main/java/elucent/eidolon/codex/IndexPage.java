@@ -1,8 +1,10 @@
 package elucent.eidolon.codex;
 
 import elucent.eidolon.Eidolon;
+import elucent.eidolon.api.deity.Deity;
 import elucent.eidolon.api.research.Research;
 import elucent.eidolon.api.spells.Sign;
+import elucent.eidolon.capability.IReputation;
 import elucent.eidolon.util.KnowledgeUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -88,6 +90,21 @@ public class IndexPage extends Page {
         }
     }
 
+    public static class ReputationLockedEntry extends IndexEntry {
+        final int reputation;
+        final ResourceLocation deity;
+
+        public ReputationLockedEntry(Chapter chapter, ItemStack icon, int reputation, Deity deity) {
+            super(chapter, icon);
+            this.reputation = reputation;
+            this.deity = deity.getId();
+        }
+
+        @Override
+        public boolean isUnlocked() {
+            return Eidolon.proxy.getWorld().getCapability(IReputation.INSTANCE).resolve().get().getReputation(Eidolon.proxy.getPlayer(), deity) >= reputation;
+        }
+    }
 
     public IndexPage(IndexEntry... pages) {
         super(BACKGROUND);
