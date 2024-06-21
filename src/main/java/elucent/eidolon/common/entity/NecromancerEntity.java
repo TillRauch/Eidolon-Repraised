@@ -36,8 +36,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 public class NecromancerEntity extends SpellcasterIllager {
     public NecromancerEntity(EntityType<? extends SpellcasterIllager> type, Level worldIn) {
         super(type, worldIn);
@@ -151,7 +149,7 @@ public class NecromancerEntity extends SpellcasterIllager {
             if (!level.isClientSide) {
                 for (int i = 0; i < 3; i++) {
                     NecromancerSpellEntity spell = new NecromancerSpellEntity(level, getX(), getEyeY(), getZ(), norm.x + random.nextFloat() * 0.1 - 0.05, norm.y + 0.04 * diff.length() / 2 + random.nextFloat() * 0.1 - 0.05, norm.z + random.nextFloat() * 0.1 - 0.05, i * 5);
-                    spell.casterId = new UUID(0, getId());
+                    spell.setOwner(NecromancerEntity.this);
                     level.addFreshEntity(spell);
                 }
             }

@@ -13,13 +13,12 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class BonechillProjectileEntity extends SpellProjectileEntity {
-    public BonechillProjectileEntity(EntityType<?> entityTypeIn, Level worldIn) {
+    public BonechillProjectileEntity(EntityType<? extends SpellProjectileEntity> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
@@ -53,7 +52,7 @@ public class BonechillProjectileEntity extends SpellProjectileEntity {
     @Override
     protected void onImpact(HitResult ray, Entity target) {
 
-        Player caster = getCaster();
+        Entity caster = getOwner();
         handleSpellDamage(caster, target, target.damageSources().indirectMagic(this, caster), 4.0f);
 
         if (target instanceof LivingEntity livingEntity) {

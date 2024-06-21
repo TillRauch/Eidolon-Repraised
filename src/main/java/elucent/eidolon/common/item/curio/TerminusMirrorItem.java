@@ -1,6 +1,5 @@
 package elucent.eidolon.common.item.curio;
 
-import elucent.eidolon.common.entity.SpellProjectileEntity;
 import elucent.eidolon.registries.Registry;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -23,8 +22,7 @@ public class TerminusMirrorItem extends EidolonCurio {
         if (event.getEntity() instanceof Player) {
             CuriosApi.getCuriosHelper().findFirstCurio(event.getEntity(), Registry.TERMINUS_MIRROR.get()).ifPresent((slots) -> {
                 ItemStack stack = slots.stack();
-                if ((event.getSource().getDirectEntity() instanceof Projectile
-                     || event.getSource().getDirectEntity() instanceof SpellProjectileEntity)) {
+                if (event.getSource().getDirectEntity() instanceof Projectile) {
                     event.setCanceled(true);
                     if (!event.getEntity().getCommandSenderWorld().isClientSide)
                         event.getEntity().getCommandSenderWorld().playSound(null, event.getEntity().blockPosition(), SoundEvents.WITHER_HURT, SoundSource.PLAYERS, 1.0f, 0.75f);

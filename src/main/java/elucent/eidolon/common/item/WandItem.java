@@ -72,7 +72,7 @@ public class WandItem extends ItemBase implements IRechargeableWand {
                     }
 
                     world.addFreshEntity(spellProjectileEntity.shoot(
-                            pos.x + randomized.x(), pos.y + randomized.y(), pos.z + randomized.z(), vel.x, vel.y, vel.z, entity.getUUID(), stack
+                            pos.x + randomized.x(), pos.y + randomized.y(), pos.z + randomized.z(), vel.x, vel.y, vel.z, entity, stack
                     ));
                 }
             }

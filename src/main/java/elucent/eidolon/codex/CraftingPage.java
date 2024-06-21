@@ -42,8 +42,8 @@ public class CraftingPage extends RecipePage<CraftingRecipe> {
             height = shaped.getHeight();
         }
 
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 int index = i * width + j;
                 if (index < inputs.size() && !inputs.get(index).isEmpty())
                     drawItems(mStack, inputs.get(index), x + 36 + j * 20, y + 36 + i * 20, mouseX, mouseY);

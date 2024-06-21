@@ -47,18 +47,12 @@ public class EntityUtil {
         Entity owner;
         Predicate<Entity> targetPredicate;
 
-        if (entity instanceof SpellProjectileEntity spellProjectile) {
-            if (spellProjectile.getCasterId() != null) {
-                owner = spellProjectile.getCaster();
-            } else {
-                owner = null;
-            }
-
-            targetPredicate = spellProjectile.trackingPredicate;
-        } else if (entity instanceof Projectile projectile) {
+        if (entity instanceof Projectile projectile) {
             owner = projectile.getOwner();
             Predicate<Entity> targetMode = projectile instanceof TargetMode mode ? mode.eidolonrepraised$getMode() : null;
-            targetPredicate = targetMode != null ? targetMode : /* Should not happen */ FALLBACK_TARGET_PREDICATE;
+            if (entity instanceof SpellProjectileEntity spellProjectile)
+                targetPredicate = spellProjectile.trackingPredicate;
+            else targetPredicate = targetMode != null ? targetMode : /* Should not happen */ FALLBACK_TARGET_PREDICATE;
         } else {
             owner = null;
             targetPredicate = FALLBACK_TARGET_PREDICATE;

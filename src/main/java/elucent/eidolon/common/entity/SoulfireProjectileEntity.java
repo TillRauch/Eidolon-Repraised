@@ -10,13 +10,12 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class SoulfireProjectileEntity extends SpellProjectileEntity {
-    public SoulfireProjectileEntity(EntityType<?> entityTypeIn, Level worldIn) {
+    public SoulfireProjectileEntity(EntityType<? extends SpellProjectileEntity> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
@@ -50,7 +49,7 @@ public class SoulfireProjectileEntity extends SpellProjectileEntity {
 
     @Override
     protected void onImpact(HitResult ray, Entity target) {
-        Player caster = getCaster();
+        Entity caster = getOwner();
         handleSpellDamage(caster, target, target.damageSources().indirectMagic(this, caster), 7.0f);
         onImpact(ray);
     }

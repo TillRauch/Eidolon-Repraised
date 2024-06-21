@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 public class NecromancerSpellEntity extends SpellProjectileEntity {
     public static final EntityDataAccessor<Integer> DELAY = SynchedEntityData.defineId(NecromancerSpellEntity.class, EntityDataSerializers.INT);
 
-    public NecromancerSpellEntity(EntityType<?> entityTypeIn, Level worldIn) {
+    public NecromancerSpellEntity(EntityType<? extends SpellProjectileEntity> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
         getEntityData().define(DELAY, 0);
     }
@@ -73,7 +73,7 @@ public class NecromancerSpellEntity extends SpellProjectileEntity {
     protected void onImpact(HitResult ray, Entity target) {
         if (target instanceof LivingEntity living)
             living.addEffect(new MobEffectInstance(EidolonPotions.VULNERABLE_EFFECT.get(), 100));
-        Entity caster = level.getEntity((int) casterId.getLeastSignificantBits());
+        Entity caster = getOwner();
         handleSpellDamage(caster, target, DamageTypeData.source(target.level(),DamageTypes.WITHER, this, caster), 3 + level.getDifficulty().getId());
         onImpact(ray);
     }

@@ -2,31 +2,25 @@ package elucent.eidolon.common.entity;
 
 import elucent.eidolon.Eidolon;
 import elucent.eidolon.util.EntityUtil;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public abstract class SpellProjectileEntity extends Entity {
+public abstract class SpellProjectileEntity extends Projectile {
     public static final TagKey<EntityType<?>> TRACKABLE = TagKey.create(ForgeRegistries.ENTITY_TYPES.getRegistryKey(), new ResourceLocation(Eidolon.MODID, "trackable"));
     public static final TagKey<EntityType<?>> TRACKABLE_BLACKLIST = TagKey.create(ForgeRegistries.ENTITY_TYPES.getRegistryKey(), new ResourceLocation(Eidolon.MODID, "trackable_blacklist"));
 
@@ -34,24 +28,22 @@ public abstract class SpellProjectileEntity extends Entity {
     public boolean isTracking;
     public boolean noImmunityFrame;
 
-    protected UUID casterId = null;
-
     private final Predicate<Entity> impactPredicate = this::shouldImpact;
 
-    public SpellProjectileEntity(EntityType<?> entityTypeIn, Level worldIn) {
+    public SpellProjectileEntity(EntityType<? extends Projectile> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
-    public Entity shoot(double x, double y, double z, double vx, double vy, double vz, final UUID caster, final ItemStack stack) {
+    public Entity shoot(double x, double y, double z, double vx, double vy, double vz, final Entity caster, final ItemStack stack) {
         setPos(x, y, z);
         setDeltaMovement(vx, vy, vz);
-        casterId = caster;
+        setOwner(caster);
         hurtMarked = true;
         return this;
     }
 
     private boolean shouldImpact(final Entity target) {
-        if (!target.isSpectator() && target.isPickable() && !target.getUUID().equals(casterId)) {
+        if (!target.isSpectator() && target.isPickable() && !target.getUUID().equals(getOwnerUUID())) {
             return true;
         }
 
@@ -59,7 +51,7 @@ public abstract class SpellProjectileEntity extends Entity {
     }
 
     private boolean shouldTrack(final Entity target) {
-        return !target.isSpectator() && !target.getUUID().equals(casterId) && !target.getType().is(TRACKABLE_BLACKLIST) && (target instanceof Enemy || target.getType().is(TRACKABLE));
+        return !target.isSpectator() && !target.getUUID().equals(getOwnerUUID()) && !target.getType().is(TRACKABLE_BLACKLIST) && (target instanceof Enemy || target.getType().is(TRACKABLE));
     }
 
     @Override
@@ -90,8 +82,9 @@ public abstract class SpellProjectileEntity extends Entity {
         setPos(pos.x + motion.x, pos.y + motion.y, pos.z + motion.z);
     }
 
-    public UUID getCasterId() {
-        return casterId;
+    public UUID getOwnerUUID() {
+        Entity owner = getOwner();
+        return owner != null ? owner.getUUID() : null;
     }
 
     protected abstract void onImpact(HitResult ray, Entity target);
@@ -111,27 +104,9 @@ public abstract class SpellProjectileEntity extends Entity {
         }
     }
 
-    public @Nullable Player getCaster() {
-        return level.getPlayerByUUID(casterId);
-    }
-
     @Override
     protected void defineSynchedData() {
         //
     }
 
-    @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
-        casterId = compound.contains("caster") ? compound.getUUID("caster") : null;
-    }
-
-    @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        if (casterId != null) compound.putUUID("caster", casterId);
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 }
