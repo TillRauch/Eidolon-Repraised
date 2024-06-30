@@ -148,9 +148,9 @@ dependencies {
     implementation fg.deobf("curse.maven:embeddium-908741:4800420")
     implementation fg.deobf("curse.maven:modernfix-790626:4792389")
 
-    implementation fg.deobf("curse.maven:placebo-283644:4872439")
-    implementation fg.deobf("curse.maven:apothic-attributes-898963:4872467")
-    implementation fg.deobf("curse.maven:apotheosis-313970:4874713")
+    implementation fg.deobf("curse.maven:placebo-283644:5414631")
+    implementation fg.deobf("curse.maven:apothic-attributes-898963:5340012")
+    implementation fg.deobf("curse.maven:apotheosis-313970:5486368")
 
     implementation fg.deobf("curse.maven:amendments-896746:5200593")
     implementation fg.deobf("curse.maven:selene-499980:5201144")
