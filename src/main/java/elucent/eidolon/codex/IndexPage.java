@@ -10,11 +10,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -102,7 +104,9 @@ public class IndexPage extends Page {
 
         @Override
         public boolean isUnlocked() {
-            return Eidolon.proxy.getWorld().getCapability(IReputation.INSTANCE).resolve().get().getReputation(Eidolon.proxy.getPlayer(), deity) >= reputation;
+            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+            if (server == null) return true;
+            return server.overworld().getCapability(IReputation.INSTANCE).resolve().get().getReputation(Eidolon.proxy.getPlayer(), deity) >= reputation;
         }
     }
 
