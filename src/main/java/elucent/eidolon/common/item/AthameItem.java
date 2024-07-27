@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -90,7 +91,7 @@ public class AthameItem extends SwordItem {
                 Vec3 hit = ctx.getClickLocation();
                 ((ServerLevel) ctx.getLevel()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), hit.x, hit.y, hit.z, 3, ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, 0.05F);
                 ctx.getLevel().playSound(null, ctx.getClickedPos(), SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 0.5f, 0.9f + random.nextFloat() * 0.2f);
-                if (random.nextInt(5) == 0) {
+                if (random.nextInt() == 0) {
 
                     // special case for planter plants, only do something if they're fully grown
                     if (state.is(Registry.PLANTER_PLANTS)) {
@@ -111,7 +112,7 @@ public class AthameItem extends SwordItem {
                         if (block instanceof DoublePlantBlock && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER)
                             ctx.getLevel().destroyBlock(ctx.getClickedPos().below(), false);
                         else ctx.getLevel().destroyBlock(ctx.getClickedPos(), false);
-                        if (random.nextInt(6) == 0) {
+                        if (random.nextInt(10) >= 8 - (ctx.getItemInHand().getItem() instanceof AthameItem ? ctx.getItemInHand().getEnchantmentLevel(Enchantments.MOB_LOOTING) : 0)) {
                             ItemStack drop = getHarvestable(block, ctx.getLevel());
                             if (!drop.isEmpty() && !ctx.getLevel().isClientSide) {
                                 ctx.getLevel().playSound(null, ctx.getClickedPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.5f, 0.9f + random.nextFloat() * 0.2f);
