@@ -12,22 +12,24 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.level.Level;
 
+import java.util.List;
+
 public class ExecCommandRitual extends Ritual {
 
-    String command;
+    List<String> commands;
 
-    public String getCommand() {
-        return command;
+    public List<String> getCommands() {
+        return commands;
     }
 
-    public ExecCommandRitual(ResourceLocation symbol, int color, String command) {
+    public ExecCommandRitual(ResourceLocation symbol, int color, List<String> command) {
         super(symbol, color);
-        this.command = command;
+        this.commands = command;
     }
 
     @Override
     public Ritual cloneRitual() {
-        return new ExecCommandRitual(getSymbol(), getColor(), command);
+        return new ExecCommandRitual(getSymbol(), getColor(), commands);
     }
 
     @Override
@@ -36,21 +38,20 @@ public class ExecCommandRitual extends Ritual {
         if (world instanceof ServerLevel serverWorld) {
 
             var server = world.getServer();
-            if (server.isCommandBlockEnabled() && !StringUtil.isNullOrEmpty(this.command)) {
-                try {
-
-                    EidolonFakePlayer fakePlayer = EidolonFakePlayer.getPlayer(serverWorld);
-                    fakePlayer.setPos(pos.getCenter());
-                    CommandSourceStack commandSource = fakePlayer.createCommandSourceStack().withPermission(2).withSuppressedOutput();
-                    server.getCommands().performPrefixedCommand(commandSource, this.command);
-
-                } catch (Throwable throwable) {
-                    CrashReport crashreport = CrashReport.forThrowable(throwable, "Executing command ritual");
-                    CrashReportCategory crashreportcategory = crashreport.addCategory("Command to be executed");
-                    crashreportcategory.setDetail("Command", this::getCommand);
-                    throw new ReportedException(crashreport);
+            for (var command : commands)
+                if (server.isCommandBlockEnabled() && !StringUtil.isNullOrEmpty(command)) {
+                    try {
+                        EidolonFakePlayer fakePlayer = EidolonFakePlayer.getPlayer(serverWorld);
+                        fakePlayer.setPos(pos.getCenter());
+                        CommandSourceStack commandSource = fakePlayer.createCommandSourceStack().withPermission(2).withSuppressedOutput();
+                        server.getCommands().performPrefixedCommand(commandSource, command);
+                    } catch (Throwable throwable) {
+                        CrashReport crashreport = CrashReport.forThrowable(throwable, "Executing command ritual");
+                        CrashReportCategory crashreportcategory = crashreport.addCategory("Command to be executed");
+                        crashreportcategory.setDetail("Command", command);
+                        throw new ReportedException(crashreport);
+                    }
                 }
-            }
 
         }
         return RitualResult.TERMINATE;

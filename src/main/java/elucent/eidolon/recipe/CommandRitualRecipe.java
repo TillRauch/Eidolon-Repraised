@@ -21,7 +21,7 @@ import java.util.List;
 
 public class CommandRitualRecipe extends RitualRecipe {
 
-    String command;
+    List<String> commands;
     ResourceLocation symbol = Signs.HARMONY_SIGN.getSprite();
     int color = 0;
 
@@ -35,22 +35,26 @@ public class CommandRitualRecipe extends RitualRecipe {
         return this;
     }
 
-    public CommandRitualRecipe(ResourceLocation recipedId, String command, Ingredient reagent, List<Ingredient> pedestalItems, List<Ingredient> focusItems, float healthRequirement) {
-        super(recipedId, reagent, pedestalItems, focusItems, healthRequirement);
-        this.command = command;
+    public CommandRitualRecipe(ResourceLocation recipeId, List<String> commands, Ingredient reagent, List<Ingredient> pedestalItems, List<Ingredient> focusItems, float healthRequirement) {
+        super(recipeId, reagent, pedestalItems, focusItems, healthRequirement);
+        this.commands = commands;
     }
 
 
     @Override
     public Ritual getRitual() {
-        return new ExecCommandRitual(symbol, color, command).setRegistryName(id);
+        return new ExecCommandRitual(symbol, color, commands).setRegistryName(id);
     }
 
     @Override
     public JsonElement asRecipe() {
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "eidolon:ritual_brazier_command");
-        jsonobject.addProperty("command", this.command);
+        JsonArray commandsJson = new JsonArray();
+        for (String command : this.commands) {
+            commandsJson.add(command);
+        }
+        jsonobject.add("commands", commandsJson);
         jsonobject.addProperty("symbol", this.symbol.toString());
         jsonobject.addProperty("color", this.color);
         addRitualElements(this, jsonobject);
@@ -79,16 +83,24 @@ public class CommandRitualRecipe extends RitualRecipe {
             JsonArray focusItems = GsonHelper.getAsJsonArray(json, "focusItems");
             List<Ingredient> foci = getPedestalItems(focusItems);
 
-            String command = GsonHelper.getAsString(json, "command");
+            List<String> commands = new ArrayList<>();
+            if (json.has("commands")) {
+                JsonArray commandsJson = GsonHelper.getAsJsonArray(json, "commands");
+                for (JsonElement element : commandsJson) {
+                    commands.add(element.getAsString());
+                }
+            } else if (json.has("command")) {
+                commands.add(GsonHelper.getAsString(json, "command"));
+            }
+
             ResourceLocation symbol = json.has("symbol") ? new ResourceLocation(GsonHelper.getAsString(json, "symbol")) : Signs.HARMONY_SIGN.getSprite();
             int color = GsonHelper.getAsInt(json, "color");
 
-            return new CommandRitualRecipe(pRecipeId, command, reagent, stacks, foci, healthRequirement).setSymbol(symbol).setColor(color);
+            return new CommandRitualRecipe(pRecipeId, commands, reagent, stacks, foci, healthRequirement).setSymbol(symbol).setColor(color);
         }
 
         @Override
         public @Nullable CommandRitualRecipe fromNetwork(@NotNull ResourceLocation pRecipeId, @NotNull FriendlyByteBuf pBuffer) {
-
             int length = pBuffer.readInt();
             int length2 = pBuffer.readInt();
             Ingredient reagent = Ingredient.fromNetwork(pBuffer);
@@ -114,20 +126,30 @@ public class CommandRitualRecipe extends RitualRecipe {
 
             float healthRequirement = pBuffer.readFloat();
 
-            String command = pBuffer.readUtf();
+            int commandsLength = pBuffer.readInt();
+            List<String> commands = new ArrayList<>();
+            for (int i = 0; i < commandsLength; i++) {
+                commands.add(pBuffer.readUtf());
+            }
+
             ResourceLocation symbol = pBuffer.readResourceLocation();
             int color = pBuffer.readInt();
 
-            return new CommandRitualRecipe(pRecipeId, command, reagent, stacks, foci, healthRequirement).setSymbol(symbol).setColor(color);
+            return new CommandRitualRecipe(pRecipeId, commands, reagent, stacks, foci, healthRequirement).setSymbol(symbol).setColor(color);
         }
 
         @Override
         public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull CommandRitualRecipe recipe) {
             super.toNetwork(buf, recipe);
-            buf.writeUtf(recipe.command);
+            buf.writeInt(recipe.commands.size());
+            for (String command : recipe.commands) {
+                buf.writeUtf(command);
+            }
             buf.writeResourceLocation(recipe.symbol);
             buf.writeInt(recipe.color);
         }
+
+
     }
 
 }
