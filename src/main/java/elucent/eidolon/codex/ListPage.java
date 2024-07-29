@@ -57,16 +57,21 @@ public class ListPage extends Page {
             AltarEntry entry = entries[i].entry;
             drawItem(mStack, icon, x + 2, y + 8 + i * 20, mouseX, mouseY);
             String text = "";
-            if (entry.getPower() > 0) {
-                text += (int) entry.getPower() + " " + I18n.get("eidolon.codex.altar_power");
-            }
-            if (entry.getCapacity() > 0) {
-                if (!text.isEmpty()) {
-                    text += ", ";
+            try {
+                if (entry.getPower() > 0) {
+                    text += (int) entry.getPower() + " " + I18n.get("eidolon.codex.altar_power");
                 }
-                text += (int) entry.getCapacity() + " " + I18n.get("eidolon.codex.altar_capacity");
+                if (entry.getCapacity() > 0) {
+                    if (!text.isEmpty()) {
+                        text += ", ";
+                    }
+                    text += (int) entry.getCapacity() + " " + I18n.get("eidolon.codex.altar_capacity");
+                }
+            } catch (Exception e) {
+                text = "Invalid Entry. Likely mod conflict.";
             }
             drawText(mStack, text, x + 24, y + 20 + i * 20 - Minecraft.getInstance().font.lineHeight);
+
         }
 
     }
