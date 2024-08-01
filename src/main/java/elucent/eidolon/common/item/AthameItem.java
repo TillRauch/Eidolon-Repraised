@@ -91,7 +91,7 @@ public class AthameItem extends SwordItem {
                 Vec3 hit = ctx.getClickLocation();
                 ((ServerLevel) ctx.getLevel()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), hit.x, hit.y, hit.z, 3, ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, 0.05F);
                 ctx.getLevel().playSound(null, ctx.getClickedPos(), SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 0.5f, 0.9f + random.nextFloat() * 0.2f);
-                if (random.nextInt() == 0) {
+                if (random.nextInt(3) == 0) {
 
                     // special case for planter plants, only do something if they're fully grown
                     if (state.is(Registry.PLANTER_PLANTS)) {
