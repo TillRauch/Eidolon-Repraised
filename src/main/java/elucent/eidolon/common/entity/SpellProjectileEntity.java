@@ -51,7 +51,7 @@ public abstract class SpellProjectileEntity extends Projectile {
     }
 
     private boolean shouldTrack(final Entity target) {
-        return !target.isSpectator() && !target.getUUID().equals(getOwnerUUID()) && !target.getType().is(TRACKABLE_BLACKLIST) && (target instanceof Enemy || target.getType().is(TRACKABLE));
+        return !target.isSpectator() && !target.getUUID().equals(getOwnerUUID()) && !target.getType().is(TRACKABLE_BLACKLIST);
     }
 
     @Override
